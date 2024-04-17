@@ -1,11 +1,7 @@
 use std::{env, fs};
-use zed::{
-    serde_json::{self, Value},
-    settings::LspSettings,
-};
 use zed_extension_api::{self as zed, Result};
 
-const SERVER_PATH: &str = "node_modules/@rescript/language-server/out/cli.js";
+const SERVER_PATH: &str = "node_modules/.bin/rescript-language-server";
 const PACKAGE_NAME: &str = "@rescript/language-server";
 
 struct ReScriptExtension {
@@ -19,6 +15,7 @@ impl ReScriptExtension {
 
     fn server_script_path(&mut self, server_id: &zed::LanguageServerId) -> Result<String> {
         let server_exists = self.server_exists();
+        self.did_find_server = true;
         if self.did_find_server && server_exists {
             return Ok(SERVER_PATH.to_string());
         }
@@ -83,30 +80,6 @@ impl zed::Extension for ReScriptExtension {
             ],
             env: Default::default(),
         })
-    }
-
-    fn language_server_workspace_configuration(
-        &mut self,
-        server_id: &zed::LanguageServerId,
-        worktree: &zed::Worktree,
-    ) -> Result<Option<Value>> {
-        // @rescript/language-server expects workspace didChangeConfiguration notification
-        // params to be the same as lsp initialization_options
-        let initialization_options = LspSettings::for_worktree(server_id.as_ref(), worktree)?
-            .initialization_options
-            .clone()
-            .unwrap_or_default();
-
-        Ok(Some(match initialization_options.clone().as_object_mut() {
-            Some(op) => {
-                // @rescript/language-server requests workspace configuration
-                // for the `resLS` section, so we have to nest
-                // another copy of initialization_options there
-                op.insert("rescriptLS".into(), initialization_options);
-                serde_json::to_value(op).unwrap_or_default()
-            }
-            None => initialization_options,
-        }))
     }
 }
 
