@@ -7,6 +7,16 @@ This extension plugs in the following projects:
 - [tree-sitter-rescript](https://github.com/rescript-lang/tree-sitter-rescript) parser
 - [@rescript/language-server](https://github.com/rescript-lang/rescript-vscode) LSP
 
+## Associate res files with ReScript
+
+Open Settings with Cmd+, and add:
+
+```json
+"file_types": {
+  "ReScript": ["res"]
+}
+```
+
 ## Developing
 
 Zed and it's support for extensions is being actively developed. The current workflow that can be used to build this extension locally and install it into Zed is:
