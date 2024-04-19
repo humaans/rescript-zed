@@ -1,6 +1,6 @@
 name = "ReScript"
 grammar = "rescript"
-path_suffixes = ["rescript"]
+path_suffixes = ["rescript", "res", "resi"]
 line_comments = ["// "]
 block_comment = ["/* ", " */"]
 brackets = [
