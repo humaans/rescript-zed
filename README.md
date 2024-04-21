@@ -13,7 +13,7 @@ Open Settings with Cmd+, and add:
 
 ```json
 "file_types": {
-  "ReScript": ["res"]
+  "ReScript": ["res", "resi"]
 }
 ```
 
