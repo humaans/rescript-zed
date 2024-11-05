@@ -33,13 +33,3 @@ After opening a ReScript file, open Cmd + Shift + P nav and find
 And to see the language server logs, open Cmd + Shift + P nav and find
 
     debug: open language server logs
-
-## Known issues
-
-This is the a very early cut of this extension and I have noticed:
-
-- it's very slow to bring up autocomplete
-- the syntax partially loses highlighting as you're typing
-- the language server crashes quite easily and doesn't restart
-
-We'll look to work through all these issues in the future releases!
