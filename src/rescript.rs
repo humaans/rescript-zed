@@ -18,7 +18,7 @@ impl ReScriptExtension {
         server_id: &zed::LanguageServerId,
     ) -> Result<Cow<'static, str>> {
         let server_exists = self.server_exists();
-        self.did_find_server = true;
+
         if self.did_find_server && server_exists {
             return Ok(SERVER_PATH.into());
         }
