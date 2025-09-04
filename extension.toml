@@ -1,7 +1,7 @@
 id = "rescript"
 name = "ReScript"
 description = "ReScript support."
-version = "0.2.0"
+version = "0.3.0"
 schema_version = 1
 authors = ["Karolis Narkevicius <hey@kn8.lt>"]
 repository = "https://github.com/humaans/rescript-zed"
