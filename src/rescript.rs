@@ -73,11 +73,13 @@ impl zed::Extension for ReScriptExtension {
     ) -> Result<zed::Command> {
         let server_path = self.server_script_path(server_id)?;
 
+        let current_dir = env::current_dir()
+            .map_err(|e| format!("failed to get current directory: {e}"))?;
+
         Ok(zed::Command {
             command: zed::node_binary_path()?,
             args: vec![
-                env::current_dir()
-                    .unwrap()
+                current_dir
                     .join(server_path.as_ref())
                     .to_string_lossy()
                     .to_string(),
