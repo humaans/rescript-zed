@@ -88,6 +88,24 @@ impl zed::Extension for ReScriptExtension {
             env: Default::default(),
         })
     }
+
+    fn language_server_initialization_options(
+        &mut self,
+        _server_id: &zed::LanguageServerId,
+        _worktree: &zed::Worktree,
+    ) -> Result<Option<zed::serde_json::Value>> {
+        Ok(Some(zed::serde_json::json!({
+            "extensionConfiguration": {
+                "inlayHints": {
+                    "enable": true
+                },
+                "codeLens": true,
+                "signatureHelp": {
+                    "enabled": true
+                }
+            }
+        })))
+    }
 }
 
 zed::register_extension!(ReScriptExtension);
