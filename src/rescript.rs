@@ -1,4 +1,6 @@
 use std::{borrow::Cow, env, fs};
+use zed_extension_api::serde_json::Value;
+use zed_extension_api::settings::LspSettings;
 use zed_extension_api::{self as zed, Result};
 
 const SERVER_PATH: &str = "node_modules/@rescript/language-server/out/cli.js";
@@ -8,14 +10,49 @@ struct ReScriptExtension {
     did_find_server: bool,
 }
 
+#[derive(Debug, Default)]
+struct Settings {
+    version: Option<String>,
+}
+
+fn parse_settings(settings_value: Value) -> Settings {
+    if let Some(obj) = settings_value.as_object() {
+        return Settings {
+            version: obj
+                .get("version")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string()),
+        };
+    }
+
+    Settings::default()
+}
+
 impl ReScriptExtension {
     fn server_exists(&self) -> bool {
-        fs::metadata(SERVER_PATH).map_or(false, |stat| stat.is_file())
+        fs::metadata(SERVER_PATH).is_ok_and(|stat| stat.is_file())
+    }
+
+    fn get_lsp_settings_for_worktree(
+        &mut self,
+        server_id: &zed::LanguageServerId,
+        worktree: &zed::Worktree,
+    ) -> Result<Settings> {
+        let settings = zed::settings::LspSettings::for_worktree(server_id.as_ref(), worktree);
+        match settings {
+            Err(_) => Ok(Settings::default()),
+            Ok(LspSettings { settings: None, .. }) => Ok(Settings::default()),
+            Ok(LspSettings {
+                settings: Some(settings_value),
+                ..
+            }) => Ok(parse_settings(settings_value)),
+        }
     }
 
     fn server_script_path(
         &mut self,
         server_id: &zed::LanguageServerId,
+        worktree: &zed::Worktree,
     ) -> Result<Cow<'static, str>> {
         let server_exists = self.server_exists();
 
@@ -24,24 +61,32 @@ impl ReScriptExtension {
         }
 
         zed::set_language_server_installation_status(
-            &server_id,
+            server_id,
             &zed::LanguageServerInstallationStatus::CheckingForUpdate,
         );
-        let version = zed::npm_package_latest_version(PACKAGE_NAME)?;
+        let settings = self.get_lsp_settings_for_worktree(server_id, worktree)?;
+
+        let version = if let Some(user_version) = settings.version {
+            user_version
+        } else {
+            zed::npm_package_latest_version(PACKAGE_NAME)?
+        };
 
         if !server_exists
             || zed::npm_package_installed_version(PACKAGE_NAME)?.as_ref() != Some(&version)
         {
             zed::set_language_server_installation_status(
-                &server_id,
+                server_id,
                 &zed::LanguageServerInstallationStatus::Downloading,
             );
             let result = zed::npm_install_package(PACKAGE_NAME, &version);
+
             match result {
                 Ok(()) => {
                     if !self.server_exists() {
                         Err(format!(
-                            "installed package '{PACKAGE_NAME}' did not contain expected path '{SERVER_PATH}'",
+                            "installed package '{}' did not contain expected path '{}'",
+                            PACKAGE_NAME, SERVER_PATH
                         ))?;
                     }
                 }
@@ -69,9 +114,9 @@ impl zed::Extension for ReScriptExtension {
     fn language_server_command(
         &mut self,
         server_id: &zed::LanguageServerId,
-        _worktree: &zed::Worktree,
+        worktree: &zed::Worktree,
     ) -> Result<zed::Command> {
-        let server_path = self.server_script_path(server_id)?;
+        let server_path = self.server_script_path(server_id, worktree)?;
 
         let current_dir = env::current_dir()
             .map_err(|e| format!("failed to get current directory: {e}"))?;
