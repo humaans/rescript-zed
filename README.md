@@ -9,23 +9,20 @@ This extension plugs in the following projects:
 
 ## IMPORTANT
 
-Starting from ReScript language server v1.64.0, the internal file watcher (chokidar) was removed ([PR #1096](https://github.com/rescript-lang/rescript-vscode/pull/1096)). The LSP server now expects the editor to watch for file changes and notify the server via the standard LSP `workspace/didChangeWatchedFiles` mechanism.
+Because of a temporary issue [#12](https://github.com/humaans/rescript-zed/issues/12), you should add this to your zed settings.json to make sure the editor sees up to date compilation results:
 
-**Recommended workaround** Since this is not currently implemented in this extension it is recommended to pin rescript-language-server to 1.62.0, which is the last version that includes the built-in chokidar file watcher:
-
-```json
-{
-  "lsp": {
-    "rescript-language-server": {
-      "settings": {
-        "version": "1.62.0"
-      }
-    }
-  }
-}
 ```
-
-We're tracking this issue in [#12](https://github.com/humaans/rescript-zed/issues/12).
+"lsp": {
+  "rescript-language-server": {
+    "initialization_options": {
+      "extensionConfiguration": {
+        "incrementalTypechecking": {
+          "enable": "true",
+        },
+      },
+    },
+  },
+}
 
 ## Settings
 
