@@ -7,23 +7,6 @@ This extension plugs in the following projects:
 - [tree-sitter-rescript](https://github.com/rescript-lang/tree-sitter-rescript) parser
 - [@rescript/language-server](https://github.com/rescript-lang/rescript-vscode) LSP
 
-## IMPORTANT
-
-Because of a temporary issue [#12](https://github.com/humaans/rescript-zed/issues/12), you should add this to your zed settings.json to make sure the editor sees up to date compilation results:
-
-```
-"lsp": {
-  "rescript-language-server": {
-    "initialization_options": {
-      "extensionConfiguration": {
-        "incrementalTypechecking": {
-          "enable": "true",
-        },
-      },
-    },
-  },
-}
-
 ## Settings
 
 ```json
