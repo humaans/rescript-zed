@@ -32,3 +32,7 @@ With `version` you can point to a specific npm version of the [@rescript/languag
 ## Developing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for instructions on how to develop this extension locally.
+
+## Acknowledgements
+
+This project was originally created by [humaans](https://github.com/humaans/). We're grateful for their initial work in bringing ReScript support to Zed.
