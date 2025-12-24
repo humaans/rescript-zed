@@ -31,30 +31,7 @@ With `version` you can point to a specific npm version of the [@rescript/languag
 
 ## Developing
 
-Zed and its support for extensions is being actively developed. The current workflow that can be used to build this extension locally and install it into Zed is:
-
-Clone zed and build the `zed-extension` cli:
-
-    git clone git@github.com:zed-industries/zed.git
-    cd zed
-    cargo build --release --package extension_cli
-    ln -sf "$(pwd -P)/target/release/zed-extension" /usr/local/bin/zed-extension
-
-Build and install the extension locally
-
-    make build
-
-Tail zed logs
-
-    tail -f ~/Library/Logs/Zed/Zed.log
-
-After opening a ReScript file, open Cmd + Shift + P nav and find
-
-    language selector: toggle
-
-And to see the language server logs, open Cmd + Shift + P nav and find
-
-    debug: open language server logs
+See [CONTRIBUTING.md](CONTRIBUTING.md) for instructions on how to develop this extension locally.
 
 ## Acknowledgements
 
