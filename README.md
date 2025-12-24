@@ -55,3 +55,7 @@ After opening a ReScript file, open Cmd + Shift + P nav and find
 And to see the language server logs, open Cmd + Shift + P nav and find
 
     debug: open language server logs
+
+## Acknowledgements
+
+This project was originally created by [humaans](https://github.com/humaans/). We're grateful for their initial work in bringing ReScript support to Zed.
