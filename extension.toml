@@ -1,10 +1,10 @@
 id = "rescript"
 name = "ReScript"
 description = "ReScript support."
-version = "0.4.1"
+version = "0.4.2"
 schema_version = 1
 authors = ["Karolis Narkevicius <hey@kn8.lt>"]
-repository = "https://github.com/humaans/rescript-zed"
+repository = "https://github.com/rescript-lang/rescript-zed"
 
 [language_servers.rescript-language-server]
 name = "rescript-language-server"
